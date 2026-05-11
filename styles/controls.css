@@ -1,0 +1,146 @@
+.slider { margin-bottom: 10px; }
+
+.slider-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 4px;
+  align-items: baseline;
+}
+
+.slider-head .name { font-weight: 600; }
+
+.slider-head .val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: var(--soil-deep);
+  color: var(--cream);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+input[type=range] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: linear-gradient(90deg, var(--rust), var(--amber));
+  border-radius: 2px;
+  outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px; height: 16px;
+  background: var(--paper);
+  border: 2px solid var(--soil-deep);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+
+input[type=range]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  background: var(--paper);
+  border: 2px solid var(--soil-deep);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.switch {
+  width: 36px; height: 20px;
+  background: var(--soil-light);
+  border-radius: 10px;
+  position: relative;
+  transition: background .2s;
+}
+
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  background: var(--paper);
+  border-radius: 50%;
+  transition: transform .2s;
+}
+
+.switch.on { background: var(--moss); }
+.switch.on::after { transform: translateX(16px); }
+
+.btn {
+  width: 100%;
+  background: var(--soil-deep);
+  color: var(--cream);
+  border: none;
+  padding: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.btn:hover { background: var(--rust); }
+
+/* ---- Math equation cards ---- */
+.math {
+  background: linear-gradient(135deg, #1a0f08 0%, #2b1d12 100%);
+  color: var(--cream);
+  border: 1px solid var(--soil-light);
+  border-radius: 5px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.math::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--amber), var(--berry), var(--amber));
+}
+
+.math-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 4px;
+}
+
+.math-eq {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.3;
+  color: var(--cream);
+}
+
+.math-eq .var   { color: var(--amber); font-weight: 600; font-style: italic; }
+.math-eq .op    { color: var(--berry); font-style: normal; }
+.math-eq .const { color: #98c267; font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+.math-eq .sub   { font-size: 11px; vertical-align: sub; }
+.math-eq .sup   { font-size: 11px; vertical-align: super; }
+
+.math-desc {
+  font-size: 11px;
+  color: rgba(244,232,208,.6);
+  margin-top: 4px;
+  font-style: italic;
+}

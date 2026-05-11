@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formicarium — An Ant Colony Simulation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/panel.css">
+  <link rel="stylesheet" href="styles/controls.css">
+  <link rel="stylesheet" href="styles/canvas.css">
+</head>
+<body>
+
+<aside class="panel">
+  <h1>Formic<span class="ital">arium</span></h1>
+  <div class="subtitle">— a study of small things —</div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Workers</div><div class="stat-value" id="stat-ants">12</div></div>
+    <div class="stat"><div class="stat-label">Food</div><div class="stat-value" id="stat-food">0</div></div>
+    <div class="stat"><div class="stat-label">Stored</div><div class="stat-value" id="stat-stored">0</div></div>
+    <div class="stat"><div class="stat-label">Hatched</div><div class="stat-value" id="stat-born">0</div></div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">Physics</div>
+
+    <div class="math">
+      <div class="math-label">Cohesion Force</div>
+      <div class="math-eq">
+        <span class="var">F</span><span class="op">=</span><span class="var">k</span><span class="op">·</span><span class="op">(</span><span class="const">1</span><span class="op">−</span><span class="var">d</span><span class="op">/</span><span class="var">r</span><span class="op">)</span>
+      </div>
+      <div class="math-desc">attraction between ants within radius r</div>
+    </div>
+
+    <div class="math">
+      <div class="math-label">Detection Field</div>
+      <div class="math-eq">
+        <span class="var">R</span><span class="sub">det</span><span class="op">=</span><span class="var">R</span><span class="sub">0</span><span class="op">·</span><span class="var">ϕ</span>
+      </div>
+      <div class="math-desc">interaction radius scaled by user input</div>
+    </div>
+
+    <div class="slider">
+      <div class="slider-head">
+        <span class="name">Attraction strength <em>k</em></span>
+        <span class="val" id="v-attr">0.40</span>
+      </div>
+      <input type="range" id="attraction" min="0" max="100" value="40">
+    </div>
+
+    <div class="slider">
+      <div class="slider-head">
+        <span class="name">Detection radius <em>R</em></span>
+        <span class="val" id="v-rad">60 px</span>
+      </div>
+      <input type="range" id="radius" min="20" max="200" value="60">
+    </div>
+
+    <div class="toggle" id="toggle-radius">
+      <span>Show detection radius</span>
+      <div class="switch"></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">Colony</div>
+
+    <div class="math">
+      <div class="math-label">Spawn Condition</div>
+      <div class="math-eq">
+        <span class="var">N</span><span class="sub">new</span><span class="op">=</span><span class="op">⌊</span><span class="var">S</span><span class="op">/</span><span class="const">5</span><span class="op">⌋</span>
+      </div>
+      <div class="math-desc">queen hatches 1 ant per 5 food stored</div>
+    </div>
+
+    <div class="slider">
+      <div class="slider-head">
+        <span class="name">Food spawn rate</span>
+        <span class="val" id="v-food">1.0×</span>
+      </div>
+      <input type="range" id="foodrate" min="10" max="300" value="100">
+    </div>
+
+    <button class="btn" id="reset">↻ Reset Colony</button>
+  </div>
+
+  <div class="divider"></div>
+  <div class="hint">Click anywhere to scatter food</div>
+</aside>
+
+<main class="stage">
+  <canvas id="cv"></canvas>
+  <div class="hud"><span class="dot"></span>COLONY ACTIVE</div>
+  <div class="legend">
+    <div class="leg-item"><span class="leg-swatch" style="background:#b8451f"></span>queen</div>
+    <div class="leg-item"><span class="leg-swatch" style="background:#1a0f08"></span>workers</div>
+    <div class="leg-item"><span class="leg-swatch" style="background:#98c267"></span>food</div>
+    <div class="leg-item"><span class="leg-swatch" style="background:#d4b896"></span>nest</div>
+  </div>
+</main>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

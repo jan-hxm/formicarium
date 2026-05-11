@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Dependencies (if a dev server is ever added)
+node_modules/

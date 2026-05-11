@@ -1,0 +1,31 @@
+:root {
+  --soil-deep: #2b1d12;
+  --soil: #3d2817;
+  --soil-light: #5a3a23;
+  --sand: #d4b896;
+  --sand-light: #e8d5b0;
+  --cream: #f4e8d0;
+  --moss: #6b8e3d;
+  --leaf: #4a6b2a;
+  --amber: #d97706;
+  --rust: #b8451f;
+  --berry: #8b2c4a;
+  --paper: #f9f1de;
+  --ink: #1a0f08;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: 'Fraunces', serif;
+  color: var(--ink);
+  background: var(--soil-deep);
+  overflow: hidden;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  background: radial-gradient(ellipse at top, #1f1610 0%, #0d0805 100%);
+}

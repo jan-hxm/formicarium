@@ -1,0 +1,7 @@
+{
+  "name": "formicarium",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx serve . --listen 5500"
+  }
+}
