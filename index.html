@@ -1,106 +1,274 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formicarium — An Ant Colony Simulation</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles/base.css">
-  <link rel="stylesheet" href="styles/panel.css">
-  <link rel="stylesheet" href="styles/controls.css">
-  <link rel="stylesheet" href="styles/canvas.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formicarium — An Ant Colony Simulation</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/base.css" />
+    <link rel="stylesheet" href="styles/panel.css" />
+    <link rel="stylesheet" href="styles/controls.css" />
+    <link rel="stylesheet" href="styles/canvas.css" />
+  </head>
+  <body>
+    <aside class="panel">
+      <h1>Formic<span class="ital">arium</span></h1>
+      <div class="subtitle">— a study of small things —</div>
 
-<aside class="panel">
-  <h1>Formic<span class="ital">arium</span></h1>
-  <div class="subtitle">— a study of small things —</div>
-
-  <div class="stats">
-    <div class="stat"><div class="stat-label">Workers</div><div class="stat-value" id="stat-ants">12</div></div>
-    <div class="stat"><div class="stat-label">Food</div><div class="stat-value" id="stat-food">0</div></div>
-    <div class="stat"><div class="stat-label">Stored</div><div class="stat-value" id="stat-stored">0</div></div>
-    <div class="stat"><div class="stat-label">Hatched</div><div class="stat-value" id="stat-born">0</div></div>
-  </div>
-
-  <div class="group">
-    <div class="group-title">Physics</div>
-
-    <div class="math">
-      <div class="math-label">Cohesion Force</div>
-      <div class="math-eq">
-        <span class="var">F</span><span class="op">=</span><span class="var">k</span><span class="op">·</span><span class="op">(</span><span class="const">1</span><span class="op">−</span><span class="var">d</span><span class="op">/</span><span class="var">r</span><span class="op">)</span>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Workers</div>
+          <div class="stat-value" id="stat-ants">12</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Food</div>
+          <div class="stat-value" id="stat-food">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Stored</div>
+          <div class="stat-value" id="stat-stored">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Hatched</div>
+          <div class="stat-value" id="stat-born">0</div>
+        </div>
       </div>
-      <div class="math-desc">attraction between ants within radius r</div>
-    </div>
 
-    <div class="math">
-      <div class="math-label">Detection Field</div>
-      <div class="math-eq">
-        <span class="var">R</span><span class="sub">det</span><span class="op">=</span><span class="var">R</span><span class="sub">0</span><span class="op">·</span><span class="var">ϕ</span>
+      <div class="group">
+        <div class="group-title">Physics</div>
+
+        <div class="math-grid">
+          <div class="math">
+            <div class="math-label">Cohesion Force</div>
+            <div class="math-eq">
+              <span class="var">F</span><span class="op">=</span
+              ><span class="var">k</span><span class="op">·</span
+              ><span class="op">(</span><span class="const">1</span
+              ><span class="op">−</span><span class="var">d</span
+              ><span class="op">/</span><span class="var">r</span
+              ><span class="op">)</span>
+            </div>
+            <div class="math-desc">attraction within radius r</div>
+          </div>
+
+          <div class="math">
+            <div class="math-label">Velocity Step</div>
+            <div class="math-eq">
+              <span class="var">v</span><span class="op">=</span
+              ><span class="op">(</span><span class="var">v</span
+              ><span class="op">+</span><span class="var">F</span
+              ><span class="op">·</span><span class="var">dt</span
+              ><span class="op">)</span><span class="op">·</span
+              ><span class="var">δ</span>
+            </div>
+            <div class="math-desc">
+              damped, capped at v<sub style="font-size: 9px">max</sub>
+            </div>
+          </div>
+        </div>
+
+        <div class="slider-grid">
+          <div class="slider">
+            <div class="slider-head">
+              <span class="name">Attract <em>k</em></span>
+              <span class="val" id="v-attr">0.25</span>
+            </div>
+            <input type="range" id="attraction" min="0" max="100" value="25" />
+          </div>
+
+          <div class="slider">
+            <div class="slider-head">
+              <span class="name">Repulsion</span>
+              <span class="val" id="v-rep">55</span>
+            </div>
+            <input type="range" id="repulsion" min="0" max="100" value="55" />
+          </div>
+
+          <div class="slider">
+            <div class="slider-head">
+              <span class="name">Radius <em>R</em></span>
+              <span class="val" id="v-rad">55 px</span>
+            </div>
+            <input type="range" id="radius" min="20" max="200" value="55" />
+          </div>
+
+          <div class="slider">
+            <div class="slider-head">
+              <span class="name">Damping <em>δ</em></span>
+              <span class="val" id="v-damp">0.95</span>
+            </div>
+            <input type="range" id="damping" min="70" max="99" value="95" />
+          </div>
+
+          <div class="slider">
+            <div class="slider-head">
+              <span class="name">Speed <em>v</em></span>
+              <span class="val" id="v-speed">100</span>
+            </div>
+            <input type="range" id="maxspeed" min="20" max="150" value="100" />
+          </div>
+        </div>
+
+        <div class="toggle" id="toggle-radius">
+          <span>Show detection radius</span>
+          <div class="switch"></div>
+        </div>
       </div>
-      <div class="math-desc">interaction radius scaled by user input</div>
-    </div>
 
-    <div class="slider">
-      <div class="slider-head">
-        <span class="name">Attraction strength <em>k</em></span>
-        <span class="val" id="v-attr">0.40</span>
+      <div class="group">
+        <div class="group-title">Colony</div>
+
+        <div class="math">
+          <div class="math-label">Spawn Condition</div>
+          <div class="math-eq">
+            <span class="var">N</span><span class="sub">new</span
+            ><span class="op">=</span><span class="op">⌊</span
+            ><span class="var">S</span><span class="op">/</span
+            ><span class="const">5</span><span class="op">⌋</span>
+          </div>
+          <div class="math-desc">queen hatches 1 ant per 5 food stored</div>
+        </div>
+
+        <div class="slider-grid">
+          <div class="slider">
+            <div class="slider-head">
+              <span class="name">Size <em>N₀</em></span>
+              <span class="val" id="v-colony">6</span>
+            </div>
+            <input type="range" id="colonysize" min="4" max="40" value="6" />
+          </div>
+
+          <div class="slider">
+            <div class="slider-head">
+              <span class="name">Food rate</span>
+              <span class="val" id="v-food">0.5×</span>
+            </div>
+            <input type="range" id="foodrate" min="10" max="300" value="50" />
+          </div>
+        </div>
+
+        <div class="slider">
+          <div class="slider-head">
+            <span class="name">Wander strength <em>σ</em></span>
+            <span class="val" id="v-wander">0.30</span>
+          </div>
+          <input
+            type="range"
+            id="wanderstrength"
+            min="5"
+            max="100"
+            value="30"
+          />
+        </div>
+
+        <button class="btn" id="reset">↻ Reset Colony</button>
       </div>
-      <input type="range" id="attraction" min="0" max="100" value="40">
-    </div>
 
-    <div class="slider">
-      <div class="slider-head">
-        <span class="name">Detection radius <em>R</em></span>
-        <span class="val" id="v-rad">60 px</span>
+      <div class="group">
+        <div class="group-title">Pheromones</div>
+
+        <div class="math-grid">
+          <div class="math">
+            <div class="math-label">Evaporation</div>
+            <div class="math-eq">
+              <span class="var">C</span><span class="op">'</span
+              ><span class="op">=</span><span class="var">C</span
+              ><span class="op">·</span><span class="op">(</span
+              ><span class="const">1</span><span class="op">−</span
+              ><span class="var">λ</span><span class="op">·</span
+              ><span class="var">dt</span><span class="op">)</span>
+            </div>
+            <div class="math-desc">concentration decays each frame</div>
+          </div>
+
+          <div class="math">
+            <div class="math-label">Trail Sensing</div>
+            <div class="math-eq">
+              <span class="var">θ̂</span><span class="op">=</span>arg max<span
+                class="op"
+                >(</span
+              ><span class="var">C</span><span class="sub">L</span
+              ><span class="op">,</span><span class="var">C</span
+              ><span class="sub">C</span><span class="op">,</span
+              ><span class="var">C</span><span class="sub">R</span
+              ><span class="op">)</span>
+            </div>
+            <div class="math-desc">3 sensors at ±θ steer toward peak</div>
+          </div>
+        </div>
+
+        <div class="slider-grid">
+          <div class="slider">
+            <div class="slider-head">
+              <span class="name">Evaporation</span>
+              <span class="val" id="v-evap">0.15</span>
+            </div>
+            <input type="range" id="evaprate" min="1" max="30" value="15" />
+          </div>
+
+          <div class="slider">
+            <div class="slider-head">
+              <span class="name">Trail influence</span>
+              <span class="val" id="v-phero">0.85</span>
+            </div>
+            <input
+              type="range"
+              id="pherostrength"
+              min="0"
+              max="100"
+              value="85"
+            />
+          </div>
+        </div>
+
+        <div class="toggle" id="toggle-pheromones">
+          <span>Show pheromone trails</span>
+          <div class="switch"></div>
+        </div>
       </div>
-      <input type="range" id="radius" min="20" max="200" value="60">
-    </div>
 
-    <div class="toggle" id="toggle-radius">
-      <span>Show detection radius</span>
-      <div class="switch"></div>
-    </div>
-  </div>
+      <div class="divider"></div>
+      <div class="hint">Click anywhere to scatter food</div>
+    </aside>
 
-  <div class="group">
-    <div class="group-title">Colony</div>
-
-    <div class="math">
-      <div class="math-label">Spawn Condition</div>
-      <div class="math-eq">
-        <span class="var">N</span><span class="sub">new</span><span class="op">=</span><span class="op">⌊</span><span class="var">S</span><span class="op">/</span><span class="const">5</span><span class="op">⌋</span>
+    <main class="stage">
+      <canvas id="cv"></canvas>
+      <div class="hud"><span class="dot"></span>COLONY ACTIVE</div>
+      <div class="legend">
+        <div class="leg-item">
+          <span class="leg-swatch" style="background: #b8451f"></span>queen
+        </div>
+        <div class="leg-item">
+          <span class="leg-swatch" style="background: #1a0f08"></span>workers
+        </div>
+        <div class="leg-item">
+          <span class="leg-swatch" style="background: #98c267"></span>food
+        </div>
+        <div class="leg-item">
+          <span class="leg-swatch" style="background: #d4b896"></span>nest
+        </div>
+        <div id="phero-legend" style="display: none">
+          <div class="leg-item">
+            <span
+              class="leg-swatch"
+              style="background: #ff8800; opacity: 0.7"
+            ></span
+            >food trail
+          </div>
+          <div class="leg-item">
+            <span
+              class="leg-swatch"
+              style="background: #32c8dc; opacity: 0.7"
+            ></span
+            >home trail
+          </div>
+        </div>
       </div>
-      <div class="math-desc">queen hatches 1 ant per 5 food stored</div>
-    </div>
+    </main>
 
-    <div class="slider">
-      <div class="slider-head">
-        <span class="name">Food spawn rate</span>
-        <span class="val" id="v-food">1.0×</span>
-      </div>
-      <input type="range" id="foodrate" min="10" max="300" value="100">
-    </div>
-
-    <button class="btn" id="reset">↻ Reset Colony</button>
-  </div>
-
-  <div class="divider"></div>
-  <div class="hint">Click anywhere to scatter food</div>
-</aside>
-
-<main class="stage">
-  <canvas id="cv"></canvas>
-  <div class="hud"><span class="dot"></span>COLONY ACTIVE</div>
-  <div class="legend">
-    <div class="leg-item"><span class="leg-swatch" style="background:#b8451f"></span>queen</div>
-    <div class="leg-item"><span class="leg-swatch" style="background:#1a0f08"></span>workers</div>
-    <div class="leg-item"><span class="leg-swatch" style="background:#98c267"></span>food</div>
-    <div class="leg-item"><span class="leg-swatch" style="background:#d4b896"></span>nest</div>
-  </div>
-</main>
-
-<script type="module" src="src/main.js"></script>
-</body>
+    <script type="module" src="src/main.js"></script>
+  </body>
 </html>

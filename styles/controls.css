@@ -96,6 +96,29 @@ input[type=range]::-moz-range-thumb {
 
 .btn:hover { background: var(--rust); }
 
+/* ---- Two-column slider grid ---- */
+.slider-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 12px;
+}
+
+.slider-grid .slider-head .name {
+  font-size: 11px;
+}
+
+/* ---- Two-column math card grid ---- */
+.math-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.math-grid .math {
+  margin-bottom: 0;
+}
+
 /* ---- Math equation cards ---- */
 .math {
   background: linear-gradient(135deg, #1a0f08 0%, #2b1d12 100%);

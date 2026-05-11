@@ -8,7 +8,7 @@ An ant colony simulation running in the browser. Workers forage for food, carry 
 - **Colony growth** — queen hatches one worker per 5 food units stored (`N_new = ⌊S/5⌋`)
 - **Food foraging** — workers seek the nearest unclaimed food item, carry it home, then resume wandering
 - **Interactive** — click anywhere on the canvas to scatter food; adjust parameters live via sliders
-- **DPI-aware canvas** — crisp rendering on HiDPI/Retina displays
+- **Pheromone trails** — carriers deposit an amber food trail home; foragers sense it with 3 forward sensors and steer up-gradient; a teal home trail marks explored territory. Evaporation rate and trail influence are tunable live.
 
 ## Running locally
 
@@ -59,7 +59,6 @@ Ant velocity is integrated with `Δt`-scaled forces and a damping factor of 0.88
 
 ## Planned additions
 
-- Pheromone trail system (stigmergic pathfinding)
 - Separation / alignment / cohesion steering (Reynolds flocking)
 - Multiple food types with different nutritional values
 - Colony health / ant lifespan

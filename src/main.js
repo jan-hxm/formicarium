@@ -6,8 +6,9 @@ import { init, spawnFood } from './entities.js';
 import { update } from './simulation.js';
 import { draw } from './renderer.js';
 import { sim } from './state.js';
+import { initPheromones } from './pheromones.js';
 
-bindControls(() => init());
+bindControls(() => { initPheromones(); init(); });
 
 canvas.addEventListener('click', e => {
   const r = canvas.getBoundingClientRect();
@@ -19,8 +20,10 @@ canvas.addEventListener('click', e => {
 });
 
 let lastTime = performance.now();
+const FRAME_MS = 1000 / 30;  // cap at 30 fps
 
 function tick(now) {
+  if (now - lastTime < FRAME_MS) { requestAnimationFrame(tick); return; }
   const dt = Math.min((now - lastTime) / 1000, 0.05);
   lastTime = now;
   update(dt);
@@ -33,5 +36,6 @@ function tick(now) {
 }
 
 resize();
+initPheromones();
 init();
 requestAnimationFrame(tick);

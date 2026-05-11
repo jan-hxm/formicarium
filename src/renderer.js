@@ -3,9 +3,11 @@
 import { ctx, viewport } from './canvas.js';
 import { sim } from './state.js';
 import { params } from './controls.js';
+import { drawPheromones } from './pheromones.js';
 
 export function draw() {
   drawBackground();
+  drawPheromones(params.showPheromones);
   drawNest();
   for (const f of sim.food) drawFood(f);
   drawQueen();
@@ -117,20 +119,18 @@ function drawAnt(ant) {
   ctx.rotate(ant.angle + Math.PI / 2);
   ctx.scale(ant.size, ant.size);
 
-  // Legs — 3 pairs, animated
+  // Legs — 3 pairs, animated — all in one path
   ctx.strokeStyle = '#1a0f08';
   ctx.lineWidth = 0.7;
   ctx.lineCap = 'round';
   const lp = ant.legPhase;
+  ctx.beginPath();
   for (const [legY, offset] of [[-2, 0], [0, Math.PI], [2, 0]]) {
     const sw = Math.sin(lp + offset) * 1.5;
-    ctx.beginPath();
     ctx.moveTo(-1, legY); ctx.quadraticCurveTo(-3, legY + sw, -5, legY + sw * 1.5);
-    ctx.stroke();
-    ctx.beginPath();
     ctx.moveTo(1, legY);  ctx.quadraticCurveTo(3, legY - sw, 5, legY - sw * 1.5);
-    ctx.stroke();
   }
+  ctx.stroke();
 
   // Shadow
   ctx.fillStyle = 'rgba(0,0,0,0.3)';
@@ -160,21 +160,15 @@ function drawAnt(ant) {
   ctx.arc(0, -4, 2.2, 0, Math.PI * 2);
   ctx.fill();
 
-  // Mandibles
-  ctx.strokeStyle = '#1a0f08';
-  ctx.lineWidth = 0.5;
-  ctx.beginPath();
-  ctx.moveTo(-1, -5.5); ctx.lineTo(-1.5, -6.5);
-  ctx.moveTo(1, -5.5);  ctx.lineTo(1.5, -6.5);
-  ctx.stroke();
-
-  // Antennae (animated sway)
+  // Mandibles + Antennae — same colour, one stroke call
   const sway = Math.sin(lp * 1.5) * 0.5;
   ctx.strokeStyle = '#1a0f08';
   ctx.lineWidth = 0.6;
   ctx.beginPath();
-  ctx.moveTo(-0.8, -5); ctx.quadraticCurveTo(-2 + sway, -7, -2.5 + sway, -8.5);
-  ctx.moveTo(0.8, -5);  ctx.quadraticCurveTo(2 - sway, -7, 2.5 - sway, -8.5);
+  ctx.moveTo(-1, -5.5);  ctx.lineTo(-1.5, -6.5);
+  ctx.moveTo(1, -5.5);   ctx.lineTo(1.5, -6.5);
+  ctx.moveTo(-0.8, -5);  ctx.quadraticCurveTo(-2 + sway, -7, -2.5 + sway, -8.5);
+  ctx.moveTo(0.8, -5);   ctx.quadraticCurveTo(2 - sway, -7, 2.5 - sway, -8.5);
   ctx.stroke();
 
   // Eyes

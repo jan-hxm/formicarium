@@ -2,6 +2,7 @@
 
 import { sim } from './state.js';
 import { viewport } from './canvas.js';
+import { params } from './controls.js';
 
 export function init() {
   const { W, H } = viewport;
@@ -13,7 +14,7 @@ export function init() {
   sim.stats.stored = 0;
   sim.stats.born   = 0;
   sim.foodAccum    = 0;
-  for (let i = 0; i < 12; i++) spawnAnt();
+  for (let i = 0; i < params.colonySize; i++) spawnAnt();
 }
 
 export function spawnAnt() {
