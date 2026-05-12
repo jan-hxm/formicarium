@@ -1,41 +1,66 @@
 'use strict';
 
-import { canvas, resize } from './canvas.js';
-import { bindControls } from './controls.js';
-import { init, spawnFood } from './entities.js';
-import { update } from './simulation.js';
-import { draw } from './renderer.js';
-import { sim } from './state.js';
-import { initPheromones } from './pheromones.js';
+import { canvas, resize, viewport } from './canvas.js';
+import { bindControls, onParamsChange, params } from './controls.js';
+import { draw, initSprites, initBackground } from './renderer.js';
+import { setPheromoneData } from './pheromones.js';
 
-bindControls(() => { initPheromones(); init(); });
+const worker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
+
+let latestSnapshot = null;
+
+worker.onmessage = (e) => {
+  const m = e.data;
+  if (m.type === 'snapshot') {
+    latestSnapshot = m;
+    if (m.phero) setPheromoneData(m.phero);
+  }
+};
+
+onParamsChange((p) => {
+  worker.postMessage({ type: 'params', params: { ...p } });
+});
+
+bindControls(() => {
+  worker.postMessage({ type: 'reset', params: { ...params } });
+});
+
+window.addEventListener('resize', () => {
+  worker.postMessage({ type: 'resize', viewport: { W: viewport.W, H: viewport.H } });
+});
 
 canvas.addEventListener('click', e => {
   const r = canvas.getBoundingClientRect();
   const x = e.clientX - r.left;
   const y = e.clientY - r.top;
   for (let i = 0; i < 5; i++) {
-    spawnFood(x + (Math.random() - .5) * 40, y + (Math.random() - .5) * 40);
+    worker.postMessage({
+      type: 'spawnFood',
+      x: x + (Math.random() - .5) * 40,
+      y: y + (Math.random() - .5) * 40,
+    });
   }
 });
 
-let lastTime = performance.now();
-const FRAME_MS = 1000 / 30;  // cap at 30 fps
-
-function tick(now) {
-  if (now - lastTime < FRAME_MS) { requestAnimationFrame(tick); return; }
-  const dt = Math.min((now - lastTime) / 1000, 0.05);
-  lastTime = now;
-  update(dt);
-  draw();
-  document.getElementById('stat-ants').textContent   = sim.ants.length;
-  document.getElementById('stat-food').textContent   = sim.food.length;
-  document.getElementById('stat-stored').textContent = sim.stats.stored;
-  document.getElementById('stat-born').textContent   = sim.stats.born;
+function tick() {
+  if (latestSnapshot) {
+    draw(latestSnapshot);
+    document.getElementById('stat-ants').textContent   = latestSnapshot.stats.ants;
+    document.getElementById('stat-food').textContent   = latestSnapshot.stats.food;
+    document.getElementById('stat-stored').textContent = latestSnapshot.stats.stored;
+    document.getElementById('stat-born').textContent   = latestSnapshot.stats.born;
+  }
   requestAnimationFrame(tick);
 }
 
 resize();
-initPheromones();
-init();
+initBackground();
+initSprites();
+
+worker.postMessage({
+  type: 'init',
+  viewport: { W: viewport.W, H: viewport.H },
+  params: { ...params },
+});
+
 requestAnimationFrame(tick);
